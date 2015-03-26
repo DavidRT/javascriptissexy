@@ -1,3 +1,5 @@
+var indexView = new Array();
+indexView.push(3);
 var allQuestions = [{question: "Inside which HTML element do we put the JavaScript?",
 					 choices: ["script>",
 					 		   "js>",
@@ -32,12 +34,49 @@ var allQuestions = [{question: "Inside which HTML element do we put the JavaScri
 $(document).ready(function(){
 	console.log('ready to go!');
 	//randomQuestion();
-	writeAnswer(randomQuestion());
+	makeQuestions();
+
+	$('#btn_next').click(function(){
+		checkAnswer(index);
+		makeQuestions();
+	});
+
 });
 
+var makeQuestions = function(){
+	index = randomQuestion();
+	writeAnswer(index);
+}
+
+var checkAnswer = function(index){
+
+	var checked  = $('input[name=answers]:checked').index('input[name=answers]');
+	console.log(checked);
+	console.log('correct answer: '+allQuestions[index].correctAnswer)
+
+	if ( checked == allQuestions[index].correctAnswer){
+		console.log('correct')
+	}else{
+		console.log('incorrect');
+	}
+	indexView.push(index);
+	//console.log(checked.index());
+};
+
 var randomQuestion = function(){
+
 	console.log('length question array:'+allQuestions.length)
+	
 	var number = 1 + Math.floor(Math.random() * allQuestions.length-1);
+	console.log('NUMBER:'+number);
+	console.log('CONTAINS'+ $.inArray( number, indexView ));
+
+		if ( $.inArray( number, indexView ) != -1 ){
+		console.log('calle');
+		arguments.callee();
+	}
+
+
 	return number;
 	//console.log(number);
 };
@@ -52,7 +91,7 @@ var writeAnswer = function(index){
 	var radios = document.getElementsByName('answers');
 	for ( i = 0; i < radios.length; i++){
 		console.log(allQuestions[index].choices[1])
-		$('label[for=ans'+(i+1)+']').html(allQuestions[index].choices[1]);
+		$('label[for=ans'+(i+1)+']').html(allQuestions[index].choices[i]);
 		radios[i].value = allQuestions[index].choices[i];
 	}
 }
