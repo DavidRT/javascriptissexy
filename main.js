@@ -1,5 +1,6 @@
 var indexView = new Array();
-indexView.push(3);
+var totalScore = 0;
+
 var allQuestions = [{question: "Inside which HTML element do we put the JavaScript?",
 					 choices: ["script>",
 					 		   "js>",
@@ -32,13 +33,14 @@ var allQuestions = [{question: "Inside which HTML element do we put the JavaScri
 					  correctAnswer:3},];
 
 $(document).ready(function(){
-	console.log('ready to go!');
+	console.log('ready to improve this!')
 	//randomQuestion();
 	makeQuestions();
 
 	$('#btn_next').click(function(){
 		checkAnswer(index);
-		makeQuestions();
+		
+		
 	});
 
 });
@@ -48,31 +50,43 @@ var makeQuestions = function(){
 	writeAnswer(index);
 }
 
+var displayScore = function(){
+	$('#questions').empty();
+	$('#questions').append('<p> Your score is:'+totalScore+'/'+allQuestions.length+' </p>')
+};
+
 var checkAnswer = function(index){
 
 	var checked  = $('input[name=answers]:checked').index('input[name=answers]');
-	console.log(checked);
-	console.log('correct answer: '+allQuestions[index].correctAnswer)
+	
 
 	if ( checked == allQuestions[index].correctAnswer){
+		totalScore++;
 		console.log('correct')
 	}else{
 		console.log('incorrect');
 	}
 	indexView.push(index);
+	console.log('indexViewLength:'+indexView.length);
+	console.log('allQuestionsLength:'+allQuestions.length);
+
+	if (indexView.length == allQuestions.length){
+		displayScore();		
+	}else{
+		makeQuestions();
+	}
 	//console.log(checked.index());
 };
 
 var randomQuestion = function(){
 
-	console.log('length question array:'+allQuestions.length)
+	
 	
 	var number = 1 + Math.floor(Math.random() * allQuestions.length-1);
-	console.log('NUMBER:'+number);
-	console.log('CONTAINS'+ $.inArray( number, indexView ));
+	
 
-		if ( $.inArray( number, indexView ) != -1 ){
-		console.log('calle');
+		if ( $.inArray( number, indexView ) != -1 && indexView.length != allQuestions.length ){
+		
 		arguments.callee();
 	}
 
@@ -83,14 +97,14 @@ var randomQuestion = function(){
 
 //change to question
 var writeAnswer = function(index){
-	console.log('=>'+allQuestions[index].question);
+	
 	$('p').text(allQuestions[index].question);
 
 //change for jquery
 	//foreach radio buttons.
 	var radios = document.getElementsByName('answers');
 	for ( i = 0; i < radios.length; i++){
-		console.log(allQuestions[index].choices[1])
+
 		$('label[for=ans'+(i+1)+']').html(allQuestions[index].choices[i]);
 		radios[i].value = allQuestions[index].choices[i];
 	}
